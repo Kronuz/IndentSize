@@ -1,0 +1,9 @@
+[
+  { "keys": ["tab"], "command": "indent_size", "context":
+      [
+    { "key": "auto_complete_visible", "operator": "equal", "operand": false }
+      ]
+  },
+  { "keys": ["shift+tab"], "command": "unindent_size" },
+  { "keys": ["backspace"], "command": "backspace_size" }
+]
