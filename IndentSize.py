@@ -7,7 +7,7 @@ class IndentSizeCommand(sublime_plugin.TextCommand):
         start_point = start.begin()
 
         tab_size = self.view.settings().get("tab_size")
-        indent_size = self.view.settings().get("indent_size", tab_size // 2)
+        indent_size = self.view.settings().get("indent_size", tab_size)
         if indent_size > tab_size:
             indent_size = tab_size
 
@@ -59,7 +59,7 @@ class UnindentSizeCommand(sublime_plugin.TextCommand):
         start_point = start.begin()
 
         tab_size = self.view.settings().get("tab_size")
-        indent_size = self.view.settings().get("indent_size", tab_size // 2)
+        indent_size = self.view.settings().get("indent_size", tab_size)
         if indent_size > tab_size:
             indent_size = tab_size
 
