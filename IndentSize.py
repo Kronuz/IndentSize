@@ -67,14 +67,15 @@ class UnindentSizeCommand(sublime_plugin.TextCommand):
         indentation = self.view.substr(indentation_region)
 
         trailing = 0
-        while True:
+
+        indent_mod = True
+        while len(indentation) and indent_mod:
             trailing += 1
             indentation = indentation[:-1]
             indentation_length = indentation.replace(" " * tab_size, "\t")
             indentation_length = indentation_length.replace(" \t", "\t").replace("\t", " " * tab_size)
             indentation_length = len(indentation_length)
-            if not (indentation_length % indent_size):
-                break
+            indent_mod = indentation_length % indent_size
 
         if trailing:
             indentation_region = sublime.Region(start_point - trailing, start_point)
