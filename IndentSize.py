@@ -14,12 +14,12 @@ class IndentSizeCommand(sublime_plugin.TextCommand):
         indentation_region = sublime.Region(line.begin(), start_point)
         indentation = self.view.substr(indentation_region)
 
-        # Figure out the true length of the line (in spaces)
+        # Figure out the true length of the indentation (in spaces)
         indentation_length = indentation.replace(" " * tab_size, "\t")
         indentation_length = indentation_length.replace(" \t", "\t").replace("\t", " " * tab_size)
         indentation_length = len(indentation_length)
 
-        # How many trailing spaces are there in the line:
+        # How many trailing spaces are there in the indentation:
         trailing_spaces = len(indentation) - len(indentation.rstrip(" "))
 
         # How many characters are there from the last indent stop:
@@ -35,6 +35,7 @@ class IndentSizeCommand(sublime_plugin.TextCommand):
             trailing = 0
             tab = " " * (indent_size - indent_mod)
 
+        # Do actual indent
         if trailing:
             indentation_region = sublime.Region(start_point - trailing, start_point)
             self.view.erase(edit, indentation_region)
@@ -66,20 +67,37 @@ class UnindentSizeCommand(sublime_plugin.TextCommand):
         indentation_region = sublime.Region(line.begin(), start_point)
         indentation = self.view.substr(indentation_region)
 
-        trailing = 0
+        # Figure out the true length of the indentation (in spaces)
+        indentation_length = indentation.replace(" " * tab_size, "\t")
+        indentation_length = indentation_length.replace(" \t", "\t").replace("\t", " " * tab_size)
+        indentation_length = len(indentation_length)
 
-        indent_mod = True
-        while len(indentation) and indent_mod:
+        # How many characters are there from the last indent stop:
+        indent_mod = indentation_length % indent_size
+        if not indent_mod:
+            indent_mod = indent_size
+
+        # Where should we stop:
+        indentation_stop = max(0, indentation_length - indent_mod)
+
+        # Go back to the point where we want the indentation to stop
+        trailing = 0
+        while indentation_length > indentation_stop:
             trailing += 1
             indentation = indentation[:-1]
             indentation_length = indentation.replace(" " * tab_size, "\t")
             indentation_length = indentation_length.replace(" \t", "\t").replace("\t", " " * tab_size)
             indentation_length = len(indentation_length)
-            indent_mod = indentation_length % indent_size
 
+        # Maybe add spaces if it needs some
+        tab = " " * (indentation_stop - indentation_length)
+
+        # Do actual unindent
         if trailing:
             indentation_region = sublime.Region(start_point - trailing, start_point)
             self.view.erase(edit, indentation_region)
+        if tab:
+            self.view.insert(edit, start_point - trailing, tab)
 
     def run(self, edit):
         for region in reversed(self.view.sel()):
