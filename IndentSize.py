@@ -83,16 +83,12 @@ class UnindentSizeCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         for region in reversed(self.view.sel()):
-            if region.empty():
-                line = self.view.line(region)
-                self.unindent(edit, line, region)
-            else:
-                for line in reversed(self.view.lines(region)):
-                    if line.a != line.b:
-                        start = self.view.find("[^ \t]", line.begin())
-                        if start is None:
-                            start = line
-                        self.unindent(edit, line, start)
+            for line in reversed(self.view.lines(region)):
+                if line.a != line.b:
+                    start = self.view.find("[^ \t]", line.begin())
+                    if start is None:
+                        start = line
+                    self.unindent(edit, line, start)
 
 
 class BackspaceSizeCommand(UnindentSizeCommand):
