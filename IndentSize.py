@@ -104,7 +104,7 @@ class BackspaceSizeCommand(UnindentSizeCommand):
                         start = self.view.find("[^ \t]", line.begin())
                         if start is None:
                             start = line
-                        if region.begin() > start.begin():
+                        if region.begin() > start.begin() or start.begin() == line.begin():
                             self.view.erase(edit, sublime.Region(region.begin() - 1, region.end()))
                         else:
                             self.unindent(edit, line, region)
