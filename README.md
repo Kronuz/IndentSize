@@ -1,8 +1,10 @@
-# IndentSize
+# Indentation Size Setting
+
 Sublime Text 3 Plugin To Add Indentation Size Setting
 
 
 ## Synopsis
+
 This plugin gives Sublime Text the ability to have different settings for tab
 width, indent size, indent type (spaces vs. tabs), so it correctly displays and
 properly indent old code, as requested in
@@ -23,9 +25,7 @@ but it has been tweaked and improved so it's more cleanly and transparently
 integrated with Sublime Text.
 
 
-
 ## Installation
-
 
 **With the Package Control plugin:** The easiest way to install IndentSize
 is through Package Control, which can be found at this site:
