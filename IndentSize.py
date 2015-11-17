@@ -28,7 +28,7 @@ class IndentSizeCommand(sublime_plugin.TextCommand):
         # How many spaces are there from the last tab stop:
         trailing_tab = min(indentation_length % tab_size, trailing_spaces)
 
-        if trailing_tab >= indent_size:
+        if tab_size == indent_size or trailing_tab >= indent_size:
             trailing = trailing_tab
             tab = "\t"
         else:
