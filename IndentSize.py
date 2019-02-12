@@ -42,10 +42,19 @@ class IndentSizeCommand(sublime_plugin.TextCommand):
         self.view.insert(edit, start_point - trailing, tab)
 
     def run(self, edit):
-        for region in reversed(self.view.sel()):
+        sel = self.view.sel()
+        for region in reversed(sel):
             if region.empty():
                 line = self.view.line(region)
-                self.indent(edit, line, region)
+                start = self.view.find("[^ \t]", line.begin())
+                if start is None:
+                    start = line
+                self.indent(edit, line, start)
+                if sel.contains(region):
+                    sel.subtract(region)
+                    region.a += 1
+                    region.b += 1
+                    sel.add(region)
             else:
                 for line in reversed(self.view.lines(region)):
                     if line.a != line.b:
@@ -100,7 +109,8 @@ class UnindentSizeCommand(sublime_plugin.TextCommand):
             self.view.insert(edit, start_point - trailing, tab)
 
     def run(self, edit):
-        for region in reversed(self.view.sel()):
+        sel = self.view.sel()
+        for region in reversed(sel):
             for line in reversed(self.view.lines(region)):
                 if line.a != line.b:
                     start = self.view.find("[^ \t]", line.begin())
@@ -111,7 +121,8 @@ class UnindentSizeCommand(sublime_plugin.TextCommand):
 
 class BackspaceSizeCommand(UnindentSizeCommand):
     def run(self, edit):
-        for region in reversed(self.view.sel()):
+        sel = self.view.sel()
+        for region in reversed(sel):
             if region.empty():
                 for line in reversed(self.view.lines(region)):
                     if line.a != line.b:
